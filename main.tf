@@ -10,29 +10,22 @@ resource "aws_kms_key" "kms" {
   tags                     = var.tags
 }
 
-
 resource "aws_msk_cluster" "example" {
   count                  = var.create_mks ? 1 : 0
-  cluster_name           = "example"
-  kafka_version          = "2.1.0"
-  number_of_broker_nodes = 3
+  cluster_name           = var.cluster_name
+  kafka_version          = var.kafka_version
+  number_of_broker_nodes = var.number_of_broker_nodes == length(var.client_subnets) ? var.number_of_broker_nodes : length(var.client_subnets)
 
   broker_node_group_info {
-    instance_type   = "kafka.m5.large"
-    ebs_volume_size = 1000
-    client_subnets = [
-      "${aws_subnet.subnet_az1.id}",
-      "${aws_subnet.subnet_az2.id}",
-      "${aws_subnet.subnet_az3.id}",
-    ]
-    security_groups = ["${aws_security_group.sg.id}"]
+    instance_type   = var.instance_type
+    ebs_volume_size = var.ebs_volume_size
+    client_subnets = var.client_subnets
+    security_groups = var.security_groups
   }
 
   encryption_info {
     encryption_at_rest_kms_key_arn = "${aws_kms_key.kms.arn}"
   }
 
-  tags = {
-    foo = "bar"
-  }
+  tags = var.tags
 }

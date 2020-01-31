@@ -1,8 +1,3 @@
-variable "create_mks" {
-  type        = bool
-  description = "Do you want to create MKS cluster"
-  default     = true
-}
 ######## For KMS key #######
 variable "create_kms" {
   type        = bool
@@ -55,3 +50,48 @@ variable "tags" {
   description = "Tags to attach"
   default     = {}
 }
+
+############ MKS Cluster ##########
+variable "cluster_name" {
+  type        = string
+  description = "Name of the MSK cluster"
+  default     = "example"
+}
+variable "kafka_version" {
+  type        = string
+  description = "Specify the desired Kafka software version"
+  default     = "2.1.0"
+}
+variable "number_of_broker_nodes" {
+  type        = number
+  description = "The desired total number of broker nodes in the kafka cluster. It must be a multiple of the number of specified client subnets."
+  default     = 3
+}
+
+variable "client_subnets" {
+  type        = list(string)
+  description = "A list of subnets to connect to in client VPC"
+  default     = []
+}
+variable "ebs_volume_size" {
+  type        = number
+  description = "The size in GiB of the EBS volume for the data drive on each broker node"
+  default     = 100
+}
+variable "instance_type" {
+  type        = string
+  description = "Specify the instance type to use for the kafka brokers. e.g. kafka.m5.large."
+  default     = "kafka.m5.large"
+}
+variable "security_groups" {
+  type        = list(string)
+  description = "A list of the security groups to associate with the elastic network interfaces to control who can communicate with the cluster."
+  default     = []
+}
+
+variable "az_distribution" {
+  type        = string
+  description = "The distribution of broker nodes across availability zones Currently the only valid value is DEFAULT"
+  default     = "DEFAULT"
+}
+
