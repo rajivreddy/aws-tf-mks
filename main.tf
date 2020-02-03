@@ -10,7 +10,7 @@ resource "aws_kms_key" "kms" {
   tags                     = var.tags
 }
 
-resource "aws_msk_cluster" "example" {
+resource "aws_msk_cluster" "this" {
   count                  = var.create_mks ? 1 : 0
   cluster_name           = var.cluster_name
   kafka_version          = var.kafka_version
